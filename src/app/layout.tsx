@@ -1,0 +1,104 @@
+import "@ant-design/v5-patch-for-react-19";
+import type { Metadata } from "next";
+import { Inter_Tight } from "next/font/google";
+import "./globals.css";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
+import NextTopLoader from "nextjs-toploader";
+import { Toaster } from "sonner";
+import { ConfigProvider } from "antd";
+import { mainTheme } from "@/theme";
+
+const interTight = Inter_Tight({
+  subsets: ["latin"],
+  variable: "--font-inter-tight",
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+});
+
+export const metadata: Metadata = {
+  title: "Trust Staff Ltd",
+  description:
+    " Utilising AI and human expertise, we simplify recruitment for sectors such as Construction, Healthcare, Hospitality, and more — helping you hire the best candidates with ease",
+};
+
+// export const metadata = {
+//   title: "Havn",
+//   template: "%s - Havn",
+//   description: "Safe, Reliable, and Ethical Transportation at Your Fingertips.",
+//   keywords: ["Havn"],
+//   openGraph: {
+//     title: "Havn",
+//     description:
+//       "Safe, Reliable, and Ethical Transportation at Your Fingertips.",
+//     images: [
+//       {
+//         url: "./opengraph-image.png",
+//         width: 1920,
+//         height: 1080,
+//       },
+//     ],
+//     url: "https://havn-572.vercel.app/",
+//     type: "trust-staff",
+//     siteName: "Havn",
+//   },
+
+//   index: true,
+//   follow: true,
+//   googleBot: {
+//     index: true,
+//     follow: true,
+//     "max-video-preview": -1,
+//     "max-image-preview": "large",
+//     "max-snippet": -1,
+//   },
+
+//   twitter: {
+//     card: "summary_large_image",
+//     title: "Havn",
+//     description:
+//       "Safe, Reliable, and Ethical Transportation at Your Fingertips.",
+//     images: ["./opengraph-image.png"],
+//     creator: "@Havn",
+//   },
+
+//   robots: {
+//     index: true,
+//     follow: true,
+//     "max-video-preview": -1,
+//     "max-image-preview": "large",
+//     "max-snippet": -1,
+//   },
+
+//   metadataBase: new URL("https://havn-572.vercel.app/"),
+// };
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en">
+      <body className={`${interTight.variable} antialiased`}>
+        <NextTopLoader
+          color="#0c3188"
+          initialPosition={0.08}
+          crawlSpeed={200}
+          height={3}
+          crawl={true}
+          showSpinner={true}
+          easing="ease-in-out"
+          speed={200}
+          shadow="0 0 10px #0c3188,0 0 5px #0c3188"
+          template='<div className="bar" role="bar"><div className="peg"></div></div> 
+  <div className="spinner" role="spinner"><div className="spinner-icon"></div></div>'
+          zIndex={1600}
+          showAtBottom={false}
+        />
+        <Toaster position="top-center" />
+        <AntdRegistry>
+          <ConfigProvider theme={mainTheme}>{children}</ConfigProvider>
+        </AntdRegistry>
+      </body>
+    </html>
+  );
+}
