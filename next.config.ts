@@ -6,18 +6,26 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "http",
-        hostname: "**", // Matches all domains using HTTP
+        hostname: "**",
       },
       {
         protocol: "https",
-        hostname: "**", // Matches all domains using HTTPS
+        hostname: "**",
       },
     ],
   },
   experimental: {
     serverActions: {
-      bodySizeLimit: 1000 * 1024 * 1024, // 10 MB in bytes
+      bodySizeLimit: 1000 * 1024 * 1024,
     },
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: "http://your-backend-ip:port/:path*", // 👈 Replace with your backend URL
+      },
+    ];
   },
 };
 
