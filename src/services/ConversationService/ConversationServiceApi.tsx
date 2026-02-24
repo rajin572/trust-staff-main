@@ -59,7 +59,6 @@ export const sendMessage = async (req: { body: any; params: any }) => {
       }
     );
     const result = await res.json();
-    console.log(res)
     revalidateTag(TagTypes.conversation);
 
     return result;
