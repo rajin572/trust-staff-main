@@ -3,7 +3,7 @@ import { decodedToken } from "@/utils/jwt";
 import Cookies from "js-cookie";
 
 export const useGetUserData = (): ISignInUser | null => {
-  const token = Cookies.get("secureStaffMainAccessToken");
+  const token = Cookies.get("trustStaffMainAccessToken");
 
   if (!token) return null;
 

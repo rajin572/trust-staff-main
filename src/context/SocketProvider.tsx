@@ -13,7 +13,7 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
   // Track token change — this picks up token after login
   useEffect(() => {
     const interval = setInterval(() => {
-      const currentToken = Cookies.get("secureStaffMainAccessToken");
+      const currentToken = Cookies.get("trustStaffMainAccessToken");
       setToken((prevToken) =>
         prevToken !== currentToken ? currentToken : prevToken
       );
@@ -28,7 +28,7 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
 
     const user = decodedToken(token);
     if (!user) {
-      Cookies.remove("secureStaffMainAccessToken");
+      Cookies.remove("trustStaffMainAccessToken");
       toast.error("Invalid token. Please log in again.");
       return;
     }

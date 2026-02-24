@@ -140,7 +140,7 @@ const MyProfile = ({ myProfileData }: { myProfileData: ICandidateProfile }) => {
     console.log(res);
     if (res?.success) {
       form.resetFields();
-      Cookies.set("secureStaffMainAccessToken", res?.data?.accessToken);
+      Cookies.set("trustStaffMainAccessToken", res?.data?.accessToken);
     }
   };
 

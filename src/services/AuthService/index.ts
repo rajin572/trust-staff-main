@@ -26,7 +26,7 @@ export const registerUser = async (
     console.log(result);
 
     if (result.success) {
-      (await cookies()).set("secureStaffSignUpToken", result.data, {
+      (await cookies()).set("trustStaffSignUpToken", result.data, {
         path: "/",
         expires: new Date(Date.now() + 1000 * 60 * 60), // 1 hour
       });
@@ -50,7 +50,7 @@ export const registerUserOtp = async (
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          token: (await cookies()).get("secureStaffSignUpToken")!.value,
+          token: (await cookies()).get("trustStaffSignUpToken")!.value,
         },
         body: JSON.stringify(req.body),
       },
@@ -58,7 +58,7 @@ export const registerUserOtp = async (
     const result = await res.json();
     console.log(result);
     if (result.success) {
-      (await cookies()).delete("secureStaffSignUpToken");
+      (await cookies()).delete("trustStaffSignUpToken");
     }
 
     return result;
@@ -89,8 +89,8 @@ export const resendOtp = async (
           "Content-Type": "application/json",
           token:
             req?.body?.purpose === "email-verification"
-              ? (await cookies()).get("secureStaffSignUpToken")!.value
-              : (await cookies()).get("secureStaffForgetToken")!.value,
+              ? (await cookies()).get("trustStaffSignUpToken")!.value
+              : (await cookies()).get("trustStaffForgetToken")!.value,
         },
         body: JSON.stringify(req.body),
       },
@@ -98,7 +98,7 @@ export const resendOtp = async (
     const result = await res.json();
 
     // if (result.success) {
-    //   (await cookies()).set("secureStaffSignUpToken", result.data, {
+    //   (await cookies()).set("trustStaffSignUpToken", result.data, {
     //     path: "/",
     //     expires: new Date(Date.now() + 1000 * 60 * 60), // 1 hour
     //   });
@@ -133,7 +133,7 @@ export const loginUser = async (
       const threeMonths = 1000 * 60 * 60 * 24 * 30 * 3; // 3 months in milliseconds
 
       (await cookies()).set(
-        "secureStaffMainAccessToken",
+        "trustStaffMainAccessToken",
         result?.data?.accessToken,
         {
           path: "/",
@@ -142,7 +142,7 @@ export const loginUser = async (
       );
 
       (await cookies()).set(
-        "secureStaffMainRefreshToken",
+        "trustStaffMainRefreshToken",
         result?.data?.refreshToken,
         {
           path: "/",
@@ -177,14 +177,10 @@ export const forgetPassword = async (
     const result = await res.json();
 
     if (result.success) {
-      (await cookies()).set(
-        "secureStaffForgetToken",
-        result.data?.forgetToken,
-        {
-          path: "/",
-          expires: new Date(Date.now() + 1000 * 60 * 60), // 1 hour
-        },
-      );
+      (await cookies()).set("trustStaffForgetToken", result.data?.forgetToken, {
+        path: "/",
+        expires: new Date(Date.now() + 1000 * 60 * 60), // 1 hour
+      });
     }
 
     return result;
@@ -206,7 +202,7 @@ export const forgetPasswordOtp = async (
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          token: (await cookies()).get("secureStaffForgetToken")!.value,
+          token: (await cookies()).get("trustStaffForgetToken")!.value,
         },
         body: JSON.stringify(req.body),
       },
@@ -214,9 +210,9 @@ export const forgetPasswordOtp = async (
     const result = await res.json();
 
     if (result.success) {
-      (await cookies()).delete("secureStaffForgetToken");
+      (await cookies()).delete("trustStaffForgetToken");
       (await cookies()).set(
-        "secureStaffForgetOtpMatchToken",
+        "trustStaffForgetOtpMatchToken",
         result.data?.forgetOtpMatchToken,
         {
           path: "/",
@@ -243,7 +239,7 @@ export const changePassword = async (
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          token: (await cookies()).get("secureStaffForgetOtpMatchToken")!.value,
+          token: (await cookies()).get("trustStaffForgetOtpMatchToken")!.value,
         },
         body: JSON.stringify(req.body),
       },
@@ -251,7 +247,7 @@ export const changePassword = async (
     const result = await res.json();
 
     if (result.success) {
-      (await cookies()).delete("secureStaffForgetOtpMatchToken");
+      (await cookies()).delete("trustStaffForgetOtpMatchToken");
     }
 
     return result;
@@ -261,9 +257,7 @@ export const changePassword = async (
 };
 
 export const getCurrentUser = async () => {
-  const accessToken = (await cookies()).get(
-    "secureStaffMainAccessToken",
-  )?.value;
+  const accessToken = (await cookies()).get("trustStaffMainAccessToken")?.value;
   let decodedData = null;
 
   if (accessToken) {
@@ -275,8 +269,8 @@ export const getCurrentUser = async () => {
 };
 
 export const logout = async () => {
-  (await cookies()).delete("secureStaffMainAccessToken");
-  (await cookies()).delete("secureStaffMainRefreshToken");
+  (await cookies()).delete("trustStaffMainAccessToken");
+  (await cookies()).delete("trustStaffMainRefreshToken");
 };
 
 export const getNewToken = async () => {
@@ -287,7 +281,7 @@ export const getNewToken = async () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: (await cookies()).get("secureStaffMainRefreshToken")!
+          Authorization: (await cookies()).get("trustStaffMainRefreshToken")!
             .value,
         },
       },
@@ -316,8 +310,8 @@ export const changeUserPassword = async (
     const result = await res.json();
 
     if (result.success) {
-      (await cookies()).delete("secureStaffMainAccessToken");
-      (await cookies()).delete("secureStaffMainRefreshToken");
+      (await cookies()).delete("trustStaffMainAccessToken");
+      (await cookies()).delete("trustStaffMainRefreshToken");
     }
 
     return result;
