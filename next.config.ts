@@ -26,7 +26,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: "http://your-backend-ip:port/:path*", // 👈 Replace with your backend URL
+        destination: "http://10.10.10.32:8010/api/:path*", // REST API
       },
     ];
   },
