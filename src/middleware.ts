@@ -10,16 +10,19 @@ interface Request {
 interface DecodedToken {
   email: string;
   role: string;
+  hasActiveSubscription: boolean;
 }
 
 export async function middleware(request: Request) {
   const { pathname } = request.nextUrl;
 
   // Await cookies() to get the cookies object
-  const accessToken = (await cookies()).get("trustStaffMainAccessToken")?.value;
+  const accessToken = (await cookies()).get(
+    "secureStaffMainAccessToken",
+  )?.value;
 
   if (!accessToken) {
-    return NextResponse.redirect(new URL("/", request.nextUrl.href));
+    return NextResponse.redirect(new URL("/sign-in", request.nextUrl.href));
   }
 
   try {
@@ -27,6 +30,7 @@ export async function middleware(request: Request) {
     const decodedData: DecodedToken | undefined = decodedToken(accessToken);
     // const email = decodedData?.email;
     const role = decodedData?.role;
+    const hasActiveSubscription = decodedData?.hasActiveSubscription;
 
     console.log("decodedData", decodedData);
 
@@ -41,7 +45,7 @@ export async function middleware(request: Request) {
       if (role === "candidate") {
         return NextResponse.next();
       } else {
-        return NextResponse.redirect(new URL("/", request.nextUrl.href));
+        return NextResponse.redirect(new URL("/sign-in", request.nextUrl.href));
       }
     }
 
@@ -54,10 +58,18 @@ export async function middleware(request: Request) {
     ];
 
     if (privateRoutesEmployer.some((route) => pathname.startsWith(route))) {
-      if (role === "employer") {
+      if (role === "employer" && hasActiveSubscription) {
         return NextResponse.next();
       } else {
-        return NextResponse.redirect(new URL("/", request.nextUrl.href));
+        if (role === "employer" && !hasActiveSubscription) {
+          return NextResponse.redirect(
+            new URL("/packages", request.nextUrl.href),
+          );
+        } else {
+          return NextResponse.redirect(
+            new URL("/sign-in", request.nextUrl.href),
+          );
+        }
       }
     }
 
@@ -67,12 +79,12 @@ export async function middleware(request: Request) {
     //   if (email) {
     //     return NextResponse.next();
     //   } else {
-    //     return NextResponse.redirect(new URL("/", request.nextUrl.href));
+    //     return NextResponse.redirect(new URL("/sign-in", request.nextUrl.href));
     //   }
     // }
   } catch (error: unknown) {
     console.error("Error decoding token:", error);
-    return NextResponse.redirect(new URL("/", request.nextUrl.href));
+    return NextResponse.redirect(new URL("/sign-in", request.nextUrl.href));
   }
 }
 
