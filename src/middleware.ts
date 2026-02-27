@@ -17,9 +17,7 @@ export async function middleware(request: Request) {
   const { pathname } = request.nextUrl;
 
   // Await cookies() to get the cookies object
-  const accessToken = (await cookies()).get(
-    "secureStaffMainAccessToken",
-  )?.value;
+  const accessToken = (await cookies()).get("trustStaffMainAccessToken")?.value;
 
   if (!accessToken) {
     return NextResponse.redirect(new URL("/sign-in", request.nextUrl.href));

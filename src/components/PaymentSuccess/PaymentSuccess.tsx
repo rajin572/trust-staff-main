@@ -12,7 +12,7 @@ const PaymentSuccess = ({ token }: { token: string }) => {
     const threeMonths = 1000 * 60 * 60 * 24 * 30 * 3;
     console.log("Received token:", token);
 
-    Cookies.set("secureStaffMainAccessToken", token, {
+    Cookies.set("trustStaffMainAccessToken", token, {
       path: "/",
       expires: new Date(Date.now() + threeMonths),
     });
